@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "29015935368",
+    "project_id": "chat-app-faab0",
+    "storage_bucket": "chat-app-faab0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29015935368:android:9db1c2432b19cea8d0123d",
+        "android_client_info": {
+          "package_name": "com.hanif.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "29015935368-lnuodcv9h9gktqre0bginvlg2rfjejuq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hanif.chat_app",
+            "certificate_hash": "e5e8d157c503f1576e04617b3baabf15a7dbb78a"
+          }
+        },
+        {
+          "client_id": "29015935368-2v0332jcgdpp96o29259n0d6nadpp8go.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEqXBafBQqUBiLJ5B3YrBZBtNsmGz5uTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "29015935368-2v0332jcgdpp96o29259n0d6nadpp8go.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
