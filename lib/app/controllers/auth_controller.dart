@@ -418,10 +418,11 @@ class AuthController extends GetxController {
       "total_unread": 0,
     });
 
-    print(chat_id);
+   
     Get.toNamed(Routes.CHAT_ROOM, arguments: {
       "chat_id": chat_id,
       "friendEmail": friendEmail,
+      // "friendUser": Frienduser.value,
     });
   }
 }
