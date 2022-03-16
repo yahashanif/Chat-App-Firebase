@@ -1,14 +1,24 @@
+import 'dart:io';
+
 import 'package:chat_app/app/data/models/users_model.dart';
 import 'package:chat_app/app/routes/app_pages.dart';
+import 'package:chat_app/app/shared/shared.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lottie/lottie.dart';
 
 class AuthController extends GetxController {
   var isSkipIntro = false.obs;
   var isAuth = false.obs;
+  var isLoading = false.obs;
+  String? token;
+  final box = GetStorage();
 
   GoogleSignIn? _googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _currentUser;
@@ -45,7 +55,10 @@ class AuthController extends GetxController {
     // kita akan mengubah isAuth => true : Auto Login
     try {
       final isSignIn = await _googleSignIn!.isSignedIn();
+      print("Sign In");
+      print(isSignIn);
       if (isSignIn) {
+        token = await FirebaseMessaging.instance.getToken();
         await _googleSignIn!
             .signInSilently()
             .then((value) => _currentUser = value);
@@ -72,6 +85,7 @@ class AuthController extends GetxController {
         await users.doc(_currentUser!.email).update({
           'lastSignInTime':
               userCredential!.user!.metadata.lastSignInTime!.toIso8601String(),
+          "token": token,
         });
 
         final currUser = await users.doc(_currentUser!.email).get();
@@ -101,10 +115,13 @@ class AuthController extends GetxController {
           });
         }
         user.refresh();
+        Get.offAllNamed(Routes.HOME);
         return true;
       }
       return false;
     } catch (err) {
+      print(
+          "========================================================================================");
       print(err);
       return false;
     }
@@ -144,14 +161,20 @@ class AuthController extends GetxController {
         print(userCredential);
 
         // Simpan Status user bahwa sudah pernah login dan tidak akan menampilkan introduction kembali
-        final box = GetStorage();
         if (box.read('skipIntro') != null) {
           box.remove('skipIntro');
         }
+        if (box.read('isLogin') != null) {
+          box.remove('isLogin');
+        }
         box.write('skipIntro', true);
+        box.write('isLogin', true);
 
         // Masukan data ke firebase Firestore...
         CollectionReference users = firestore.collection('users');
+        token = await FirebaseMessaging.instance.getToken();
+
+        // Membuat Token FCM
 
         final checkUser = await users.doc(_currentUser!.email).get();
         if (checkUser.data() == null) {
@@ -161,18 +184,20 @@ class AuthController extends GetxController {
             'keyName': _currentUser!.displayName!.substring(0, 1).toUpperCase(),
             'email': _currentUser!.email,
             'photoUrl': _currentUser!.photoUrl ?? "noimage",
-            'status': '',
+            'status': 'Pengguna Baru',
             'creationTime':
                 userCredential!.user!.metadata.creationTime!.toIso8601String(),
             'lastSignInTime': userCredential!.user!.metadata.lastSignInTime!
                 .toIso8601String(),
             'updatedTime': DateTime.now().toIso8601String(),
+            'token': token,
           });
           await users.doc(_currentUser!.email).collection('chats');
         } else {
           await users.doc(_currentUser!.email).update({
             'lastSignInTime': userCredential!.user!.metadata.lastSignInTime!
                 .toIso8601String(),
+            'token': token,
           });
         }
 
@@ -210,16 +235,34 @@ class AuthController extends GetxController {
         print("tidak berhasil login");
       }
 
-      print(_currentUser);
+      // print(_currentUser);
     } catch (error) {
       print(error);
     }
   }
 
   Future<void> logout() async {
+    BuildContext context;
+    Get.defaultDialog(
+        title: "Waiting to Logout",
+        titleStyle: blackTextStyle.copyWith(
+          fontSize: 12,
+          fontWeight: bold,
+        ),
+        backgroundColor: Color.fromARGB(0, 235, 235, 235).withOpacity(0.7),
+        barrierDismissible: false,
+        content: LottieBuilder.asset(
+          "assets/lottie/loading.json",
+          width: 100,
+        ));
+    box.remove("isLogin");
+    box.write("isLogin", false);
     await _googleSignIn!.disconnect();
-    await _googleSignIn!.signOut();
-    Get.offAllNamed(Routes.LOGIN);
+    await _googleSignIn!.signOut().then((value) {
+      print(box.read("isLogin"));
+      exit(0);
+    });
+    // Get.offAllNamed(Routes.LOGIN);
   }
 // Profile
 
@@ -251,6 +294,33 @@ class AuthController extends GetxController {
 
     user.refresh();
     Get.defaultDialog(title: "Success", middleText: "Change Profile success,");
+  }
+
+  // Update Status
+  void updateStatus(String status) {
+    String date = DateTime.now().toIso8601String();
+    // Update Firebase
+    CollectionReference users = firestore.collection('users');
+
+    users.doc(_currentUser!.email).update({
+      'status': status,
+      'lastSignInTime':
+          userCredential!.user!.metadata.lastSignInTime!.toIso8601String(),
+      'updatedTime': date
+    });
+
+    // Update Model
+    user.update(
+      (user) {
+        user!.status = status;
+        user.lastSignInTime =
+            userCredential!.user!.metadata.lastSignInTime!.toIso8601String();
+        user.updatedTime = date;
+      },
+    );
+
+    user.refresh();
+    Get.defaultDialog(title: "Success", middleText: "Change Status success,");
   }
 
 // search
@@ -418,11 +488,19 @@ class AuthController extends GetxController {
       "total_unread": 0,
     });
 
-   
     Get.toNamed(Routes.CHAT_ROOM, arguments: {
       "chat_id": chat_id,
       "friendEmail": friendEmail,
       // "friendUser": Frienduser.value,
     });
+  }
+
+  screen(context) {
+    BoxConstraints constraints = BoxConstraints();
+    ScreenUtil.init(
+      constraints,
+      context: context,
+      designSize: Size(390, 844),
+    );
   }
 }
