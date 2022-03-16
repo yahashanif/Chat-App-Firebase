@@ -6,6 +6,8 @@ import 'package:chat_app/app/modules/chat_room/bindings/chat_room_binding.dart';
 import 'package:chat_app/app/modules/chat_room/views/chat_room_view.dart';
 import 'package:chat_app/app/modules/introduction/bindings/introduction_binding.dart';
 import 'package:chat_app/app/modules/introduction/views/introduction_view.dart';
+import 'package:chat_app/app/modules/loading/bindings/loading_binding.dart';
+import 'package:chat_app/app/modules/loading/views/loading_view.dart';
 import 'package:chat_app/app/modules/login/bindings/login_binding.dart';
 import 'package:chat_app/app/modules/login/views/login_view.dart';
 import 'package:chat_app/app/modules/profile/bindings/profile_binding.dart';
@@ -63,6 +65,11 @@ class AppPages {
       name: _Paths.CHANGE_PROFILE,
       page: () => ChangeProfileView(),
       binding: ChangeProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOADING,
+      page: () => LoadingView(),
+      binding: LoadingBinding(),
     ),
   ];
 }

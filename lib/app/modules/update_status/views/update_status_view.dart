@@ -1,3 +1,4 @@
+import 'package:chat_app/app/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -5,6 +6,7 @@ import 'package:get/get.dart';
 import '../controllers/update_status_controller.dart';
 
 class UpdateStatusView extends GetView<UpdateStatusController> {
+  final authC = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +28,7 @@ class UpdateStatusView extends GetView<UpdateStatusController> {
               TextField(
                 controller: controller.statusC,
                 cursorColor: Colors.black,
+                autocorrect: false,
                 decoration: InputDecoration(
                     labelText: "Status",
                     labelStyle: TextStyle(color: Colors.black),
@@ -46,7 +49,9 @@ class UpdateStatusView extends GetView<UpdateStatusController> {
               Container(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    authC.updateStatus(controller.statusC.text);
+                  },
                   child: Text(
                     'UPDATE',
                     style: TextStyle(

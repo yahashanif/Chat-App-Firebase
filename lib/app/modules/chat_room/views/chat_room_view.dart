@@ -167,6 +167,7 @@ class ChatRoomView extends GetView<ChatRoomController> {
                                             ? true
                                             : false,
                                         time: "${allData[index]["time"]}",
+                                        isRead: allData[index]["isRead"],
                                       ),
                                     ],
                                   );
@@ -180,6 +181,7 @@ class ChatRoomView extends GetView<ChatRoomController> {
                                           ? true
                                           : false,
                                       time: "${allData[index]["time"]}",
+                                      isRead: allData[index]["isRead"],
                                     );
                                   }
                                   return Column(
@@ -197,6 +199,7 @@ class ChatRoomView extends GetView<ChatRoomController> {
                                             ? true
                                             : false,
                                         time: "${allData[index]["time"]}",
+                                        isRead: allData[index]["isRead"],
                                       ),
                                     ],
                                   );
@@ -255,11 +258,20 @@ class ChatRoomView extends GetView<ChatRoomController> {
                       borderRadius: BorderRadius.circular(100),
                       color: Colors.red[900],
                       child: InkWell(
-                        onTap: () => controller.newChat(
-                          authC.user.value.email!,
-                          Get.arguments as Map<String, dynamic>,
-                          controller.chatC.text,
-                        ),
+                        onTap: () {
+                          controller.sendPushMessage(
+                            ((Get.arguments
+                                    as Map<String, dynamic>)['friendEmail'])
+                                as String,
+                            controller.chatC.text,
+                            authC.user.value.name!,
+                          );
+                          controller.newChat(
+                            authC.user.value.email!,
+                            Get.arguments as Map<String, dynamic>,
+                            controller.chatC.text,
+                          );
+                        },
                         borderRadius: BorderRadius.circular(100),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -322,11 +334,13 @@ class ItemChat extends StatelessWidget {
   final bool? isSender;
   final String? msg;
   final String? time;
+  final bool? isRead;
 
   ItemChat({
     required this.isSender,
     required this.msg,
     required this.time,
+    required this.isRead,
   });
 
   @override
@@ -360,7 +374,26 @@ class ItemChat extends StatelessWidget {
           SizedBox(
             height: 5,
           ),
-          Text(DateFormat.jm().format(DateTime.parse(time!))),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                DateFormat.jm().format(
+                  DateTime.parse(time!),
+                ),
+              ),
+              isSender!
+                  ? Align(
+                      alignment: Alignment.centerRight,
+                      child: isRead!
+                          ? Icon(
+                              Icons.check_circle,
+                              color: Colors.blue,
+                            )
+                          : Icon(Icons.check_circle_outlined))
+                  : SizedBox()
+            ],
+          ),
         ],
       ),
       alignment: isSender! ? Alignment.centerRight : Alignment.centerLeft,

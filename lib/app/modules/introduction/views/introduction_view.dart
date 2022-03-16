@@ -11,63 +11,59 @@ class IntroductionView extends GetView<IntroductionController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.grey,
         body: IntroductionScreen(
-      pages: [
-        PageViewModel(
-          title: "Beriteraksi dengan mudah",
-          body: "Kamu hanya per;u di rumah saja untuk mendapatkan teman baru",
-          image: Container(
-            width: Get.width * 0.6,
-            height: Get.width * 0.6,
-            child: Center(
-                child: Lottie.asset("assets/lottie/main-laptop-duduk.json")),
+          pages: [
+            PageViewModel(
+              title: "Berinteraksi sesama dengan mudah",
+              body: "kamu hanya perlu di rumah saja menghubungi teman kamu",
+              image: Container(
+                width: Get.width * 0.6,
+                height: Get.width * 0.6,
+                child: Center(child: Lottie.asset("assets/lottie/intro1.json")),
+              ),
+            ),
+          
+            PageViewModel(
+              title: "Aplikasi bebas biaya",
+              body:
+                  "Kamu tidak perlu khawatir, aplikasi ini bebas biaya apapun.",
+              image: Container(
+                width: Get.width * 0.6,
+                height: Get.width * 0.6,
+                child:
+                    Center(child: Lottie.asset("assets/lottie/payment.json")),
+              ),
+            ),
+            PageViewModel(
+              title: "Gabung sekarang juga",
+              body:
+                  "Daftarkan diri kamu untuk menjadi bagian dari kami, kami akan menghubungkan dengan 1000 teman lainnya.",
+              image: Container(
+                width: Get.width * 0.6,
+                height: Get.width * 0.6,
+                child:
+                    Center(child: Lottie.asset("assets/lottie/register.json")),
+              ),
+            )
+          ],
+          isProgress: true,
+          onDone: () => Get.offAllNamed(Routes.LOGIN),
+          // onSkip: () {
+
+          // },
+          showBackButton: false,
+          showSkipButton: true,
+          skip: Text(
+            "Skip",
+            style: TextStyle(),
           ),
-        ),
-        PageViewModel(
-          title: "Temukan sahabat baru",
-          body:
-              "Jika kamu memang jodoh karena aplikasi ini, kami sangat bahagia",
-          image: Container(
-            width: Get.width * 0.6,
-            height: Get.width * 0.6,
-            child: Center(child: Lottie.asset("assets/lottie/ojek.json")),
+          next: Text(
+            "Lanjut",
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-        ),
-        PageViewModel(
-          title: "Aplikasi bebas biaya",
-          body: "Kamu tidak perlu khawatir, aplikasi ini bebas biaya apapun.",
-          image: Container(
-            width: Get.width * 0.6,
-            height: Get.width * 0.6,
-            child: Center(child: Lottie.asset("assets/lottie/payment.json")),
-          ),
-        ),
-        PageViewModel(
-          title: "Gabung sekarang juga",
-          body:
-              "Daftarkan diri kamu untuk menjadi bagian dari kami, kami akan menghubungkan dengan 1000 teman lainnya.",
-          image: Container(
-            width: Get.width * 0.6,
-            height: Get.width * 0.6,
-            child: Center(child: Lottie.asset("assets/lottie/register.json")),
-          ),
-        )
-      ],
-      onDone: () => Get.offAllNamed(Routes.LOGIN),
-      // onSkip: () {
-        
-      // },
-      showBackButton: false,
-      showSkipButton: true,
-      skip: Text(
-        "Skip",
-        style: TextStyle(),
-      ),
-      next: Text(
-        "Next",
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      done: const Text("Login", style: TextStyle(fontWeight: FontWeight.w600)),
-    ));
+          done: const Text("Login",
+              style: TextStyle(fontWeight: FontWeight.w600)),
+        ));
   }
 }

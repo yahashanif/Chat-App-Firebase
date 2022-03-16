@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chat_app/app/data/providers/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ class ChatRoomController extends GetxController {
 
   int total_undread = 0;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Provider _provider = Provider();
 
   late FocusNode focusNode;
   late TextEditingController chatC;
@@ -119,6 +121,15 @@ class ChatRoomController extends GetxController {
       }
       chatC.clear();
     }
+  }
+
+  void sendPushMessage(String email, String body, String title) async {
+    print("sdfsdf :"+body);
+    CollectionReference users = firestore.collection("users");
+    final dataFriend = await users.doc(email).get();
+    final data = dataFriend.data() as Map<String,dynamic>;
+    var token =data["token"];
+    _provider.sendPushMessage(token, body, title);
   }
 
   @override

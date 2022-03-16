@@ -18,6 +18,13 @@ dependencies:
   get_storage: 2.0.3
   cloud_firestore: 3.1.10
   intl: 0.17.0
+  image_picker: 0.8.4+11
+  onesignal_flutter: 3.3.0
+  flutter_local_notifications: 9.4.0
+  firebase_messaging: 11.2.10
+  just_audio: 0.9.20
+  flutter_screenutil: 5.3.1
+  google_fonts: 2.3.1
   flutter: 
     sdk: flutter
 

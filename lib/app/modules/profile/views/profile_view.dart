@@ -28,7 +28,32 @@ class ProfileView extends GetView<ProfileController> {
           ),
           actions: [
             IconButton(
-              onPressed: () => authC.logout(),
+              onPressed: () {
+                Get.dialog(
+                  AlertDialog(
+
+                    title: Text("This should not be closed automatically"),
+                    content: Text("This should not be closed automatically"),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text("CLOSE"),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("EXIT"),
+                        onPressed: () {
+                         Get.back();
+                         authC.logout();
+                        },
+                      ),
+                    ],
+                  ),
+                  barrierDismissible: false,
+                );
+                // authC.logout();
+              },
               icon: Icon(
                 Icons.logout,
                 color: Colors.black,

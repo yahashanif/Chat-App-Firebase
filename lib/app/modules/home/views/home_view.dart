@@ -1,3 +1,4 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:chat_app/app/controllers/auth_controller.dart';
 import 'package:chat_app/app/routes/app_pages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -43,9 +44,10 @@ class HomeView extends GetView<HomeController> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Material(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.red[900],
+                  AvatarGlow(
+                    endRadius: 25,
+                    glowColor: Colors.blue,
+                    duration: Duration(seconds: 2),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(50),
                       onTap: () {
@@ -53,10 +55,21 @@ class HomeView extends GetView<HomeController> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Icon(
-                          Icons.person,
-                          size: 35,
-                          color: Colors.white,
+                        child: Obx(
+                          () => ClipRRect(
+                            borderRadius: BorderRadius.circular(200),
+                            child: authC.user.value.photoUrl == "noimage"
+                                ? Image.asset(
+                                    "assets/logo/noimage.png",
+                                    fit: BoxFit.cover,
+                                    width: 35,
+                                  )
+                                : Image.network(
+                                    authC.user.value.photoUrl!,
+                                    fit: BoxFit.cover,
+                                    width: 35,
+                                  ),
+                          ),
                         ),
                       ),
                     ),
@@ -158,7 +171,7 @@ class HomeView extends GetView<HomeController> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     subtitle: Text(
-                                      "${data["status"]}",
+                                      "Status : ${data["status"]}",
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600),

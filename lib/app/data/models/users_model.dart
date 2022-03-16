@@ -19,6 +19,7 @@ class UsersModel {
         this.photoUrl,
         this.status,
         this.updatedTime,
+        this.token,
         this.chats,
     });
 
@@ -31,6 +32,7 @@ class UsersModel {
     String? photoUrl;
     String? status;
     String? updatedTime;
+    String? token;
     List<ChatUser>? chats;
 
     factory UsersModel.fromJson(Map<String, dynamic> json) => UsersModel(
@@ -43,6 +45,7 @@ class UsersModel {
         photoUrl: json["photoUrl"],
         status: json["status"],
         updatedTime: json["updatedTime"],
+        token: json["token"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -55,6 +58,7 @@ class UsersModel {
         "photoUrl": photoUrl,
         "status": status,
         "updatedTime": updatedTime!,
+        "token": token!,
     };
 }
 
